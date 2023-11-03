@@ -1,0 +1,18 @@
+{
+    "python.autoComplete.extraPaths": [
+        "E:\\Epic Games\\ARKDevkit\\Projects\\ShooterGame\\Intermediate\\PythonStub",
+    ],
+    "python.analysis.extraPaths": [
+        "E:\\Epic Games\\ARKDevkit\\Projects\\ShooterGame\\Intermediate\\PythonStub"
+    ],
+    "cSpell.words": [
+        "consts",
+        "DCSC",
+        "DCSCs",
+        "Dinos",
+        "ETBHM",
+        "ETHM",
+        "mults",
+        "TBHM"
+    ]
+}
