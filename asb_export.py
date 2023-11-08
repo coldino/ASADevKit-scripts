@@ -115,7 +115,7 @@ def make_json_from_species(species: dict) -> dict:
         mod=dict(id="ASA", tag="", title="Ark: Survival Ascended"),
         species=sorted(species.values(), key=lambda x: x['blueprintPath']),
         dyeStartIndex=128,
-        dyeDefintiions=dye_data,
+        dyeDefinitions=dye_data,
     )
 
 save_as_json(make_json_from_species(new_species_data), NEW_SPECIES_JSON, pretty=True)
