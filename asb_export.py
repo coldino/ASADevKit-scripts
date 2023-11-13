@@ -122,7 +122,7 @@ def main():
         return dict(
             version="25.53.449746",
             format="1.15-asa",
-            mod=dict(id="ASA", tag="", title="Ark: Survival Ascended", shortTitle="ASA"),
+            mod=dict(id="ASA", tag="", title="Ark: Survival Ascended", shortTitle="ASA", official=True),
             species=sorted(species.values(), key=lambda x: x['blueprintPath']),
             dyeStartIndex=128,
             dyeDefinitions=dyes,
