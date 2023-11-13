@@ -1,4 +1,4 @@
-from typing import Iterator, List, Optional
+from typing import Iterator, List, Optional, Union
 
 import unreal
 
@@ -11,8 +11,21 @@ subobject_data_system = unreal.get_engine_subsystem(unreal.SubobjectDataSubsyste
 assert subobject_data_system
 
 
-def load_asset(asset: unreal.AssetData) -> unreal.Object:
-    return unreal.load_asset(str(asset.package_name))
+def get_cdo_from_asset(asset: unreal.Object) -> Optional[unreal.Object]:
+    if not isinstance(asset, unreal.Blueprint):
+        return None
+    cls = asset.generated_class()
+    if not cls:
+        return None
+    return unreal.get_default_object(cls)
+
+
+def load_asset(asset_data_or_package_name: Union[unreal.AssetData,str]) -> unreal.Object:
+    if isinstance(asset_data_or_package_name, unreal.AssetData):
+        if not (pkg_name := asset_data_or_package_name.package_name):
+            raise ValueError(f"AssetData {asset_data_or_package_name} has no package name")
+        asset_data_or_package_name = str(pkg_name)
+    return unreal.load_asset(asset_data_or_package_name)
 
 
 def get_components_from_blueprint(bp: unreal.Blueprint) -> Iterator[unreal.Object]:

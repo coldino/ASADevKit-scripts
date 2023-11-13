@@ -1,4 +1,5 @@
 import sys
+from typing import Optional
 import unreal
 import json
 from pathlib import Path
@@ -11,14 +12,14 @@ print(f'Running {SCRIPT_FILE}')
 BASE_PATH = SCRIPT_FILE.parent
 sys.path.append(str(BASE_PATH))
 
-from jsonutils import save_as_json
-from ue_utils import find_all_species, get_dcsc_from_bp
-from stats import values_for_species
-from consts import SKIP_SPECIES
-from colors import color_hex_to_decimal
-
 # Force reload all local modules, else changes won't be picked up
 [reload(mod) for mod in list(sys.modules.values()) if (path:=getattr(mod, '__file__', None)) and Path(path).is_relative_to(BASE_PATH)]
+
+from jsonutils import save_as_json
+from ue_utils import find_all_species, get_cdo_from_asset, get_dcsc_from_bp, load_asset
+from stats import values_for_species
+from consts import SKIP_SPECIES
+from colors import parse_dyes
 
 # Constants
 CURRENT_VALUES = Path(r'D:\Work\Gms\Ark\Purlovia\output\data\asb\values.json')
@@ -27,7 +28,6 @@ MUTATION_OUTPUT = DATA_PATH / 'mutation_mults.toml'
 SPECIES_OUTPUT = DATA_PATH / 'stats.toml'
 NEW_SPECIES_JSON = DATA_PATH / 'new_values.json'
 CHANGED_SPECIES_JSON = DATA_PATH / 'changed_values.json'
-DYE_DATA = BASE_PATH / 'asa-dyes.csv'
 
 
 # Load ASE values so it can be compared to the current values
@@ -36,10 +36,6 @@ with open(CURRENT_VALUES) as f:
 
 # Convert it to a dictionary for easier access
 old_species_data = {species['blueprintPath']: species for species in old_raw_values['species']}
-
-# Load the dye data
-with open(DYE_DATA) as f:
-    dye_data = [(row[1],color_hex_to_decimal(row[2])) for row in (line.split(',') for line in f)]
 
 def append_file(path: Path, text: str) -> None:
     with open(path, 'at') as f:
@@ -52,6 +48,16 @@ with(open(SPECIES_OUTPUT, 'wt')) as f:
 
 
 def main():
+    unreal.log_warning("Loading PrimalGameData...")
+    pgd = get_cdo_from_asset(load_asset('/Game/PrimalEarth/CoreBlueprints/COREMEDIA_PrimalGameData_BP'))
+    if not isinstance(pgd, unreal.PrimalGameData):
+        unreal.log_error("Unable to load PrimalGameData!")
+        return
+
+    unreal.log("Parsing dye list")
+    dyes = parse_dyes(pgd.master_dye_list)
+
+    unreal.log_warning("Checking all species for changes...")
     it = find_all_species()
     new_species_data = {}
     changed_species_data = {}
@@ -119,7 +125,7 @@ def main():
             mod=dict(id="ASA", tag="", title="Ark: Survival Ascended", shortTitle="ASA"),
             species=sorted(species.values(), key=lambda x: x['blueprintPath']),
             dyeStartIndex=128,
-            dyeDefinitions=dye_data,
+            dyeDefinitions=dyes,
         )
 
     save_as_json(make_json_from_species(new_species_data), NEW_SPECIES_JSON, pretty=True)
