@@ -49,6 +49,7 @@ def is_creature(default: unreal.Object) -> bool:
 
 def find_all_species() -> Iterator[tuple[unreal.Object, unreal.PrimalDinoCharacter]]:
     for root in SPECIES_ROOTS:
+        print(f"Searching {root}")
         assets = asset_registry.get_assets_by_path(root, recursive=True)
         assert assets
         for asset_data in assets:

@@ -1,62 +1,21 @@
-from typing import List, Optional, Dict, Any
+from typing import Any, Optional
+
 import unreal
 from unreal import PrimalDinoStatusComponent, PrimalDinoCharacter
 
-from consts import IS_PERCENT_STAT, STAT_COUNT
+from consts import OUTPUT_OVERRIDES, STAT_COUNT, VARIANT_OVERRIDES
 from clean_numbers import clean_float as cf, clean_double as cd
+from species.bones import gather_damage_mults
+from species.breeding import gather_breeding_data
+from species.taming import gather_taming_data
+from species.stats import DEFAULT_IMPRINT_MULTS, DEFAULT_MAX_STATUS_VALUES, gather_stat_data
 
 
-DEFAULT_IMPRINT_MULTS = [0.2, 0, 0.2, 0, 0.2, 0.2, 0, 0.2, 0.2, 0.2, 0, 0]
-DEFAULT_MAX_STATUS_VALUES = [100]*6 + [0]*6
-
-
-
-def gather_stat_data(dcsc: PrimalDinoStatusComponent, meta_props: PrimalDinoStatusComponent, is_flyer: bool) -> List[Optional[List[float]]]:
-    statsArray = list()
-
-    iw_values: List[float] = [0] * STAT_COUNT
-    for ark_index in range(STAT_COUNT):
-        can_level: bool = (ark_index == 2) or meta_props.can_level_up_value[ark_index] # type: ignore
-        dont_use: bool = meta_props.dont_use_value[ark_index] # type: ignore
-
-        # Creates a null value in the JSON for stats that are unused
-        if dont_use and not can_level:
-            stat_data: Optional[List[float]] = None
-
-        else:
-            add_one = 1 if IS_PERCENT_STAT[ark_index] else 0
-
-            # Zero-out stats that can't level
-            wild_mult = 1 if can_level else 0
-
-            # Also zero-out domestic stats that can't level, adding exception for flyer speed :(
-            dom_mult = 1 if ark_index == 9 and is_flyer else wild_mult
-
-            ETHM = cf(dcsc.extra_tamed_health_multiplier) if ark_index == 0 else 1 # type: ignore
-
-            # Overrides the IW value for Torpor. While this hasn't been seen before, a species may allow torpor
-            #   to be leveled in the wild. Unsure how Ark would handle this.
-            if ark_index == 2:
-                iw_values[ark_index] = cf(dcsc.the_max_torpor_increase_per_base_level) # type: ignore
-            else:
-                iw_values[ark_index] = cf(dcsc.amount_max_gained_per_level_up_value[ark_index]) # type: ignore
-
-            stat_data = [
-                cf(dcsc.max_status_values[ark_index] + add_one), # type: ignore
-                cf(iw_values[ark_index] * wild_mult),
-                cf(dcsc.amount_max_gained_per_level_up_value_tamed[ark_index] * ETHM * dom_mult), # type: ignore
-                cf(dcsc.taming_max_stat_additions[ark_index]), # type: ignore
-                cf(dcsc.taming_max_stat_multipliers[ark_index]), # type: ignore
-            ] # type: ignore
-
-        statsArray.append(stat_data)
-
-    return statsArray
-
-
-def values_for_species(bp: str, char: PrimalDinoCharacter, dcsc: PrimalDinoStatusComponent) -> Optional[Dict[str, str]]:
+def values_for_species(bp: str, char: PrimalDinoCharacter, dcsc: PrimalDinoStatusComponent) -> Optional[dict[str, str]]:
     unreal.log(f'Using Character: {char.get_full_name()}')
     unreal.log(f'Using DCSC: {dcsc.get_full_name()}')
+
+    short_bp = bp.split('.')[0]
 
     # Having no name or tag is an indication that this is an intermediate class, not a spawnable species
     name = (str(char.descriptive_name) or str(char.dino_name_tag)).strip()
@@ -73,7 +32,18 @@ def values_for_species(bp: str, char: PrimalDinoCharacter, dcsc: PrimalDinoStatu
     if bp.endswith('_C'):
         bp = bp[:-2]
 
-    species: Dict[str, Any] = dict(blueprintPath=bp)
+    species: dict[str, Any] = dict(blueprintPath=bp, name=name)
+
+
+    # Skip vehicles
+    if char.is_vehicle:
+        return None
+
+
+    # Variants
+    variants = VARIANT_OVERRIDES.get(short_bp, None)
+    if variants:
+        species['variants'] = sorted(variants)
 
 
     # Stat data
@@ -85,20 +55,44 @@ def values_for_species(bp: str, char: PrimalDinoCharacter, dcsc: PrimalDinoStatu
 
 
     # Imprint multipliers
-    stat_imprint_mults: List[float] = list()
+    stat_imprint_mults: list[float] = list()
     unique_mults = False
     for stat_index in range(STAT_COUNT):
         imprint_mult = dcsc.dino_max_stat_add_multiplier_imprinting[stat_index] # type: ignore
-        stat_imprint_mults.append(cf(imprint_mult))
+        stat_imprint_mults.append(cf(imprint_mult)) # type: ignore
 
         diff = abs(imprint_mult - DEFAULT_IMPRINT_MULTS[stat_index])
         if diff > 0.0001:
             unique_mults = True
 
     if unique_mults:
-        print(f'Default imprint mults: {DEFAULT_IMPRINT_MULTS}')
-        print(f'Unique imprint mults: {stat_imprint_mults}')
+        # print(f'Default imprint mults: {DEFAULT_IMPRINT_MULTS}')
+        # print(f'Unique imprint mults: {stat_imprint_mults}')
         species['statImprintMult'] = stat_imprint_mults
+
+
+    # Breeding data
+    if char.can_have_baby:
+        breeding_data = None
+        breeding_data = gather_breeding_data(char)
+        if breeding_data:
+            species['breeding'] = breeding_data
+
+
+    # TODO: Color data
+
+
+    # Taming data
+    taming = gather_taming_data(short_bp, char, dcsc)
+    if taming:
+        species['taming'] = taming
+
+
+    # Bone damage multipliers
+    dmg_mults = None
+    dmg_mults = gather_damage_mults(char)
+    if dmg_mults:
+        species['boneDamageAdjusters'] = dmg_mults
 
 
     # Misc data
@@ -138,5 +132,12 @@ def values_for_species(bp: str, char: PrimalDinoCharacter, dcsc: PrimalDinoStatu
             skip_wild_level_bitmap |= (1 << i)
     if skip_wild_level_bitmap:
         species['skipWildLevelStats'] = skip_wild_level_bitmap
+
+
+    # General output overrides
+    overrides = OUTPUT_OVERRIDES.get(short_bp, None)
+    if overrides:
+        species.update(overrides)
+
 
     return species

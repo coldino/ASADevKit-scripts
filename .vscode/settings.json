@@ -14,5 +14,6 @@
         "ETHM",
         "mults",
         "TBHM"
-    ]
+    ],
+    "explorer.excludeGitIgnore": false
 }
