@@ -3,11 +3,12 @@ from typing import Any, Optional
 import unreal
 from unreal import PrimalDinoStatusComponent, PrimalDinoCharacter
 
-from consts import OUTPUT_OVERRIDES, STAT_COUNT, VARIANT_OVERRIDES
+from consts import COLOR_REGION_WHITELIST, OUTPUT_OVERRIDES, STAT_COUNT, VARIANT_OVERRIDES
 from clean_numbers import clean_float as cf, clean_double as cd
 from species.bones import gather_damage_mults
 from species.breeding import gather_breeding_data
 from species.taming import gather_taming_data
+from species.colors import gather_color_data
 from species.stats import DEFAULT_IMPRINT_MULTS, DEFAULT_MAX_STATUS_VALUES, gather_stat_data
 
 
@@ -79,9 +80,6 @@ def values_for_species(bp: str, char: PrimalDinoCharacter, dcsc: PrimalDinoStatu
             species['breeding'] = breeding_data
 
 
-    # TODO: Color data
-
-
     # Taming data
     taming = gather_taming_data(short_bp, char, dcsc)
     if taming:
@@ -132,6 +130,13 @@ def values_for_species(bp: str, char: PrimalDinoCharacter, dcsc: PrimalDinoStatu
             skip_wild_level_bitmap |= (1 << i)
     if skip_wild_level_bitmap:
         species['skipWildLevelStats'] = skip_wild_level_bitmap
+
+
+    # Color data
+    if short_bp in COLOR_REGION_WHITELIST:
+        colors = gather_color_data(short_bp, char)
+        if colors:
+            species['colors'] = colors
 
 
     # General output overrides

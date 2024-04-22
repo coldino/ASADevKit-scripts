@@ -1,4 +1,8 @@
+from typing import Optional, TypedDict
+
+
 STAT_COUNT = 12
+NUM_REGIONS = 6
 IS_PERCENT_STAT = (0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1)
 
 SPECIES_ROOTS = [
@@ -63,6 +67,8 @@ SKIP_SPECIES = [
     '/Game/ScorchedEarth/Dinos/Wyvern/Wyvern_Character_BP_ZombieBase',
     '/Game/ScorchedEarth/Dinos/Wyvern/Wyvern_Character_BP_Base',
     '/Game/ScorchedEarth/Dinos/JugBug/Jugbug_Character_BaseBP',
+    '/Game/Mods/FjordurOfficial/Assets/Dinos/FenrirBoss/Hati/Hati_Character_BP',
+    '/Game/Mods/FjordurOfficial/Assets/Dinos/FenrirBoss/Skoll/Skoll_Character_BP',
 ]
 
 VARIANT_OVERRIDES = {
@@ -111,14 +117,6 @@ TAMING_OVERRIDES = {
 
 OUTPUT_OVERRIDES = {
     '/Game/ASA/Dinos/Fasolasuchus/Fasola_Character_BP': {
-        "colors": [
-            { "name": "Body Main" },
-            { "name": "Body Spots" },
-            { "name": "Spikes" },
-            None,
-            { "name": "Body Rings" },
-            { "name": "Head/Back Highlights" }
-        ],
         "immobilizedBy": [ "Chain Bola", "Large Bear Trap", "Plant Species Y" ],
     },
     '/Game/Packs/Frontier/Dinos/Oasisaur/Oasisaur_Character_BP': {
@@ -187,6 +185,33 @@ OUTPUT_OVERRIDES = {
     '/Game/ScorchedEarth/Dinos/Manticore/Manticore_Character_BP_Hard': {
         "name": 'Manticore',
     },
+    '/Game/EndGame/Dinos/Endboss/EndbossDragon/EndBossDragon_Character_BP_Easy': {
+        "name": 'Dragon',
+    },
+    '/Game/EndGame/Dinos/Endboss/EndbossDragon/EndBossDragon_Character_BP_Medium': {
+        "name": 'Dragon',
+    },
+    '/Game/EndGame/Dinos/Endboss/EndbossDragon/EndBossDragon_Character_BP_Hard': {
+        "name": 'Dragon',
+    },
+    '/Game/EndGame/Dinos/Endboss/EndbossGorilla/EndBossGorilla_Character_BP_Easy': {
+        "name": 'Megapithecus',
+    },
+    '/Game/EndGame/Dinos/Endboss/EndbossGorilla/EndBossGorilla_Character_BP_Medium': {
+        "name": 'Megapithecus',
+    },
+    '/Game/EndGame/Dinos/Endboss/EndbossGorilla/EndBossGorilla_Character_BP_Hard': {
+        "name": 'Megapithecus',
+    },
+    '/Game/EndGame/Dinos/Endboss/EndbossSpider/EndBossSpiderL_Character_BP_Easy': {
+        "name": 'Broodmother Lysrix',
+    },
+    '/Game/EndGame/Dinos/Endboss/EndbossSpider/EndBossSpiderL_Character_BP_Medium': {
+        "name": 'Broodmother Lysrix',
+    },
+    '/Game/EndGame/Dinos/Endboss/EndbossSpider/EndBossSpiderL_Character_BP_Hard': {
+        "name": 'Broodmother Lysrix',
+    },
 }
 
 MANUAL_SPECIES = {
@@ -241,3 +266,32 @@ MANUAL_SPECIES = {
 			"displayedStats": 927
 		},
 }
+
+COLOR_REGION_WHITELIST = {
+    '/Game/ASA/Dinos/Fasolasuchus/Fasola_Character_BP',
+    '/Game/Packs/Frontier/Dinos/Oasisaur/Oasisaur_Character_BP',
+    '/Gigantoraptor/Gigantoraptor/Gigantoraptor_Character_BP',
+    # '/Game/ScorchedEarth/Dinos/Jerboa/Jerboa_Character_BP',
+    '/Game/ScorchedEarth/Dinos/Wyvern/Wyvern_Character_BP_Lightning',
+}
+
+COLOR_REGION_BAD_NAMES = set(map(str.lower, [
+    # '**ignore**nothing**',
+]))
+
+
+class RegionInfo(TypedDict):
+    name: Optional[str]
+    colors: Optional[list[str]]
+
+
+COLOR_OVERRIDES: dict[str, dict[int, Optional[RegionInfo]]] = {
+    '/Game/ASA/Dinos/Fasolasuchus/Fasola_Character_BP': {
+        0: { "name": "Body Main" },
+        1: { "name": "Body Spots" },
+        2: { "name": "Spikes" },
+        3: None,
+        4: { "name": "Body Rings" },
+        5: { "name": "Head/Back Highlights" },
+    },
+} # type: ignore
