@@ -1,3 +1,6 @@
+import sys
+from pathlib import Path
+from importlib import reload
 from typing import Iterator, List, Optional, Union
 
 import unreal
@@ -9,6 +12,28 @@ asset_registry = unreal.AssetRegistryHelpers.get_asset_registry()
 assert asset_registry
 subobject_data_system = unreal.get_engine_subsystem(unreal.SubobjectDataSubsystem)
 assert subobject_data_system
+
+
+def init_env():
+    SCRIPT_FILE = Path(__file__).absolute()
+    print(f'Running {SCRIPT_FILE}')
+
+    # Make sure we can load local modules
+    BASE_PATH = SCRIPT_FILE.parent
+    if str(BASE_PATH) not in sys.path:
+        sys.path.append(str(BASE_PATH))
+
+    # Force reload all local modules, else changes won't be picked up
+    for name,mod in list(sys.modules.items()):
+        if (path:=getattr(mod, '__file__', None)) and Path(path).is_relative_to(BASE_PATH):
+            try:
+                reload(mod)
+                unreal.reload(name)
+            except Exception as e:
+                print(f"Error reloading {mod}: {e}")
+    # [reload(mod) for mod in list(sys.modules.values()) if (path:=getattr(mod, '__file__', None)) and Path(path).is_relative_to(BASE_PATH)]
+
+    return BASE_PATH
 
 
 def get_cdo_from_asset(asset: unreal.Object) -> Optional[unreal.Object]:
@@ -48,20 +73,27 @@ def is_creature(default: unreal.Object) -> bool:
 
 
 def find_all_species() -> Iterator[tuple[unreal.Object, unreal.PrimalDinoCharacter]]:
-    for root in SPECIES_ROOTS:
-        print(f"Searching {root}")
-        assets = asset_registry.get_assets_by_path(root, recursive=True)
-        assert assets
-        for asset_data in assets:
-            asset = load_asset(asset_data)
-            if not isinstance(asset, unreal.Blueprint):
-                continue
-            cls = asset.generated_class()
-            if not cls:
-                continue
-            cdo = unreal.get_default_object(cls)
-            if cdo and is_creature(cdo):
-                yield asset, cdo
+    with unreal.ScopedSlowTask(len(SPECIES_ROOTS), "Exporting all species") as slow_task:
+        slow_task.make_dialog_delayed(2, True)
+
+        for i, root in enumerate(SPECIES_ROOTS):
+            print(f"Searching {root}")
+            slow_task.enter_progress_frame(1, f"Searching {root}")
+            assets = asset_registry.get_assets_by_path(root, recursive=True)
+            assert assets
+            for asset_data in assets:
+                asset = load_asset(asset_data)
+                if not isinstance(asset, unreal.Blueprint):
+                    continue
+                cls = asset.generated_class()
+                if not cls:
+                    continue
+                cdo = unreal.get_default_object(cls)
+                if cdo and is_creature(cdo):
+                    yield asset, cdo
+
+                if slow_task.should_cancel():
+                    raise KeyboardInterrupt
 
 
 def get_dcsc_from_bp(bp: unreal.Object) -> Optional[unreal.PrimalDinoStatusComponent]:

@@ -1,25 +1,10 @@
-import sys
-import unreal
 import json
+from typing import Any, Optional
+import unreal
 from pathlib import Path
-from importlib import reload
 
-
-SCRIPT_FILE = Path(__file__).absolute()
-print(f'Running {SCRIPT_FILE}')
-
-# Make sure we can load local modules
-BASE_PATH = SCRIPT_FILE.parent
-sys.path.append(str(BASE_PATH))
-
-# Force reload all local modules, else changes won't be picked up
-for mod in list(sys.modules.values()):
-    if (path:=getattr(mod, '__file__', None)) and Path(path).is_relative_to(BASE_PATH):
-        try:
-            reload(mod)
-        except Exception as e:
-            print(f"Error reloading {mod}: {e}")
-# [reload(mod) for mod in list(sys.modules.values()) if (path:=getattr(mod, '__file__', None)) and Path(path).is_relative_to(BASE_PATH)]
+from ue_utils import init_env
+BASE_PATH = init_env()
 
 from jsonutils import save_as_json
 from ue_utils import find_all_species, get_cdo_from_asset, get_dcsc_from_bp, load_asset
@@ -43,15 +28,6 @@ with open(CURRENT_VALUES) as f:
 # Convert it to a dictionary for easier access
 old_species_data = {species['blueprintPath']: species for species in old_raw_values['species']}
 
-def append_file(path: Path, text: str) -> None:
-    with open(path, 'at') as f:
-        f.write(text)
-
-with(open(MUTATION_OUTPUT, 'wt')) as f:
-    f.write("[species]\n")
-with(open(SPECIES_OUTPUT, 'wt')) as f:
-    f.write("[species]\n\n")
-
 
 def main():
     unreal.log_warning("Loading PrimalGameData...")
@@ -66,43 +42,21 @@ def main():
     unreal.log_warning("Checking all species for changes...")
     new_species_data = {}
     changed_species_data = {}
-    # for i in range(100):
-    # while True:
     for bp, char in find_all_species():
         unreal.log_warning(bp.get_path_name().split('.')[0])
         unreal.log_flush()
 
-        # bp = None
-        # try:
-        #     bp, char = next(it)
-        #     unreal.log_warning(bp.get_path_name().split('.')[0])
-        # except StopIteration:
-        #     break
-        # except Exception as e:
-        #     unreal.log_error(f"Error loading asset: {e}")
-        #     import traceback
-        #     traceback.print_exc()
-        #     continue
-
-        bp_name = bp.get_path_name()
-        if bp_name.split('.')[0] in SKIP_SPECIES:
-            unreal.log(f"(skipped)")
-            continue
-
-        dcsc = get_dcsc_from_bp(bp)
-        if not dcsc:
-            unreal.log_error("Unable to select DCSC")
-            continue
-
-        new_data = values_for_species(bp_name, char, dcsc)
+        # Extract "new" data from the DevKit
+        new_data = extract_species(bp, char)
         if not new_data:
-            unreal.log_error("Skipping species")
             continue
 
+        # Pull old data from the existing values file
         old_data = old_species_data.get(new_data['blueprintPath'], None)
 
         new_species_data[new_data['blueprintPath']] = new_data
 
+        # Record changes between the two
         if old_data:
             changes = {}
             # Collect changes per key
@@ -122,13 +76,6 @@ def main():
                 "blueprintPath": new_data['blueprintPath'],
                 **new_data,
             }
-
-
-        # output_string = f'''["{new_data['blueprintPath']}"]\n'''
-        # for key, value in changes.items():
-        #     output_string += f'"{key}" = {value!r}\n'
-        # output_string += '\n'
-        # append_file(SPECIES_OUTPUT, output_string)
 
     # Also add manual species
     for bp_path, char in MANUAL_SPECIES.items():
@@ -153,21 +100,28 @@ def main():
     save_as_json(make_json_from_species(changed_species_data), CHANGED_SPECIES_JSON, pretty=True)
 
 
+def extract_species(bp: unreal.Object, char: unreal.PrimalDinoCharacter) -> Optional[dict[str, Any]]:
+    bp_name = bp.get_path_name()
+    if bp_name.split('.')[0] in SKIP_SPECIES:
+        unreal.log(f"(skipped)")
+        return None
+
+    dcsc = get_dcsc_from_bp(bp)
+    if not dcsc:
+        unreal.log_error("Unable to select DCSC")
+        return None
+
+    species_data = values_for_species(bp_name, char, dcsc)
+    if not species_data:
+        unreal.log_error("Skipping species")
+        return None
+
+    return species_data
+
+
 
 
 if __name__ == '__main__':
     main()
-    print(f"Finished {SCRIPT_FILE}")
-
-
-
-# unreal.EditorUtilityLibrary().get_selected_assets()
-# cls = dodo_dcsc.get_class()
-# bp = unreal.EditorAssetLibrary.load_blueprint_class(cls.get_path_name())
-# default = unreal.get_default_object(bp)
-#
-# for asset in assets:
-#   name = str(asset.package_name)
-#   if "Character_BP" in name and "Dodo" in name:
-#     break
+    unreal.log_warning(f"Finished.")
 
