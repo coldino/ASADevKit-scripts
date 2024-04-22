@@ -2,19 +2,23 @@ STAT_COUNT = 12
 IS_PERCENT_STAT = (0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1)
 
 SPECIES_ROOTS = [
-    "/Game/PrimalEarth/Dinos/",
     "/Game/Aberration/Dinos/",
+    "/Game/ASA/Dinos/",
+    "/Game/EndGame/Dinos/",
     "/Game/Extinction/Dinos/",
     "/Game/Fjordur/Dinos/",
     "/Game/Genesis/Dinos/",
     "/Game/Genesis2/Dinos/",
     "/Game/LostIsland/Dinos/",
+    "/Game/Mods/CrystalIsles/Assets/Dinos/",
+    "/Game/Mods/FjordurOfficial/Assets/Dinos/",
     # "/Game/Mods/LostIsland/Assets/Dinos/",
     "/Game/Mods/Ragnarok/Custom_Assets/",
     "/Game/Mods/Valguero/Assets/Dinos/",
-    "/Game/ScorchedEarth/Dinos/",
     "/Game/Packs/Frontier/Dinos/",
-    "/Game/ASA/Dinos/",
+    "/Game/PrimalEarth/Dinos/",
+    "/Game/ScorchedEarth/Dinos/",
+    "/Game/Valguero/Dinos/",
 ]
 
 
