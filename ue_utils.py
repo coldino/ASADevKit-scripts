@@ -1,11 +1,9 @@
 import sys
 from pathlib import Path
 from importlib import reload
-from typing import Iterator, List, Optional, Union
+from typing import Iterator, List, Optional, Union, cast
 
 import unreal
-
-from consts import SPECIES_ROOTS
 
 
 asset_registry = unreal.AssetRegistryHelpers.get_asset_registry()
@@ -26,7 +24,9 @@ def reload_local_modules(base_path: Path):
     # [reload(mod) for mod in list(sys.modules.values()) if (path:=getattr(mod, '__file__', None)) and Path(path).is_relative_to(BASE_PATH)]
 
 
-def get_cdo_from_asset(asset: unreal.Object) -> Optional[unreal.Object]:
+def get_cdo_from_asset(asset: Union[unreal.Object,unreal.AssetData]) -> Optional[unreal.Object]:
+    if isinstance(asset, unreal.AssetData):
+        return unreal.VictoryCore.get_class_default_object_from_asset(asset)
     if not isinstance(asset, unreal.Blueprint):
         return None
     cls = asset.generated_class()
@@ -63,27 +63,27 @@ def is_creature(default: unreal.Object) -> bool:
 
 
 def find_all_species() -> Iterator[tuple[unreal.Object, unreal.PrimalDinoCharacter]]:
-    with unreal.ScopedSlowTask(len(SPECIES_ROOTS), "Exporting all species") as slow_task:
+    # Using Dino_Character_BP_C instead of PrimalDinoCharacter skips some unwanted things like vehicles and scripted boss spawns
+    filter = unreal.ARFilter(
+        class_paths=[unreal.TopLevelAssetPath('/Game/PrimalEarth/CoreBlueprints/Dino_Character_BP', 'Dino_Character_BP_C')],
+        recursive_classes=True
+    )
+    all_species: list[unreal.AssetData] = list(filter.get_blueprint_assets())
+
+    with unreal.ScopedSlowTask(len(all_species), "Exporting all species") as slow_task:
         slow_task.make_dialog_delayed(2, True)
 
-        for i, root in enumerate(SPECIES_ROOTS):
-            print(f"Searching {root}")
-            slow_task.enter_progress_frame(1, f"Searching {root}")
-            assets = asset_registry.get_assets_by_path(root, recursive=True)
-            assert assets
-            for asset_data in assets:
-                asset = load_asset(asset_data)
-                if not isinstance(asset, unreal.Blueprint):
-                    continue
-                cls = asset.generated_class()
-                if not cls:
-                    continue
-                cdo = unreal.get_default_object(cls)
-                if cdo and is_creature(cdo):
-                    yield asset, cdo
+        for asset_data in all_species:
+            slow_task.enter_progress_frame(1, f"Checking {str(asset_data.package_path)}")
+            asset = load_asset(asset_data)
+            cdo_untyped = get_cdo_from_asset(asset)
+            if not cdo_untyped:
+                continue
+            cdo = cast(unreal.PrimalDinoCharacter, cdo_untyped)
+            yield asset, cdo
 
-                if slow_task.should_cancel():
-                    raise KeyboardInterrupt
+            if slow_task.should_cancel():
+                raise KeyboardInterrupt
 
 
 def get_dcsc_from_bp(bp: unreal.Object) -> Optional[unreal.PrimalDinoStatusComponent]:

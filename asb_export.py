@@ -18,7 +18,7 @@ reload_local_modules(BASE_PATH)
 
 from jsonutils import save_as_json
 from ue_utils import find_all_species, get_cdo_from_asset, get_dcsc_from_bp, load_asset
-from consts import MANUAL_SPECIES, SKIP_SPECIES
+from consts import MANUAL_SPECIES, SKIP_SPECIES, SKIP_SPECIES_ROOTS
 from colors import parse_dyes
 from species.values import values_for_species
 
@@ -112,9 +112,16 @@ def main():
 
 def extract_species(bp: unreal.Object, char: unreal.PrimalDinoCharacter) -> Optional[dict[str, Any]]:
     bp_name = bp.get_path_name()
-    if bp_name.split('.')[0] in SKIP_SPECIES:
+    short_bp = bp_name.split('.')[0]
+
+    # Check if we should skip this species
+    if short_bp in SKIP_SPECIES:
         unreal.log(f"(skipped)")
         return None
+    for skip_root in SKIP_SPECIES_ROOTS:
+        if short_bp.startswith(skip_root):
+            unreal.log(f"(skipped root)")
+            return None
 
     dcsc = get_dcsc_from_bp(bp)
     if not dcsc:

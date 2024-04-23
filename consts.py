@@ -5,26 +5,11 @@ STAT_COUNT = 12
 NUM_REGIONS = 6
 IS_PERCENT_STAT = (0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1)
 
-SPECIES_ROOTS = [
-    "/Game/Aberration/Dinos/",
-    "/Game/ASA/Dinos/",
-    "/Game/EndGame/Dinos/",
-    "/Game/Extinction/Dinos/",
-    "/Game/Fjordur/Dinos/",
-    "/Game/Genesis/Dinos/",
-    "/Game/Genesis2/Dinos/",
-    "/Game/LostIsland/Dinos/",
-    "/Game/Mods/CrystalIsles/Assets/Dinos/",
-    "/Game/Mods/FjordurOfficial/Assets/Dinos/",
-    # "/Game/Mods/LostIsland/Assets/Dinos/",
-    "/Game/Mods/Ragnarok/Custom_Assets/",
-    "/Game/Mods/Valguero/Assets/Dinos/",
-    "/Game/Packs/Frontier/Dinos/",
-    "/Game/PrimalEarth/Dinos/",
-    "/Game/ScorchedEarth/Dinos/",
-    "/Game/Valguero/Dinos/",
-]
 
+SKIP_SPECIES_ROOTS = [
+    '/cfeditor',
+    '/Game/PrimalEarth/CoreBlueprints/Dino_Character_BP_', # a whole bunch of bases
+]
 
 SKIP_SPECIES = [
     '/Game/Aberration/Boss/Rockwell/Rockwell_Character_BP',
@@ -69,6 +54,10 @@ SKIP_SPECIES = [
     '/Game/ScorchedEarth/Dinos/JugBug/Jugbug_Character_BaseBP',
     '/Game/Mods/FjordurOfficial/Assets/Dinos/FenrirBoss/Hati/Hati_Character_BP',
     '/Game/Mods/FjordurOfficial/Assets/Dinos/FenrirBoss/Skoll/Skoll_Character_BP',
+    '/Game/Genesis/Weapons/CruiseMissile/TekCruiseMissile_Character_BP',
+    '/Game/Genesis2/Structures/RemoteCamera/RemoteCamera_Character_BP',
+    '/Game/Mek_Character_Base_BP.Mek_Character_Base_BP',
+    '/Game/SpaceWhale_Character_Base_BP',
 ]
 
 VARIANT_OVERRIDES = {
