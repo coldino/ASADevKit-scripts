@@ -14,26 +14,16 @@ subobject_data_system = unreal.get_engine_subsystem(unreal.SubobjectDataSubsyste
 assert subobject_data_system
 
 
-def init_env():
-    SCRIPT_FILE = Path(__file__).absolute()
-    print(f'Running {SCRIPT_FILE}')
-
-    # Make sure we can load local modules
-    BASE_PATH = SCRIPT_FILE.parent
-    if str(BASE_PATH) not in sys.path:
-        sys.path.append(str(BASE_PATH))
-
+def reload_local_modules(base_path: Path):
     # Force reload all local modules, else changes won't be picked up
     for name,mod in list(sys.modules.items()):
-        if (path:=getattr(mod, '__file__', None)) and Path(path).is_relative_to(BASE_PATH):
+        if (path:=getattr(mod, '__file__', None)) and Path(path).is_relative_to(base_path):
             try:
                 reload(mod)
                 unreal.reload(name)
             except Exception as e:
                 print(f"Error reloading {mod}: {e}")
     # [reload(mod) for mod in list(sys.modules.values()) if (path:=getattr(mod, '__file__', None)) and Path(path).is_relative_to(BASE_PATH)]
-
-    return BASE_PATH
 
 
 def get_cdo_from_asset(asset: unreal.Object) -> Optional[unreal.Object]:

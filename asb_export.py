@@ -1,10 +1,20 @@
+import sys
 import json
 from typing import Any, Optional
 import unreal
 from pathlib import Path
 
-from ue_utils import init_env
-BASE_PATH = init_env()
+
+# Make sure we can load local modules
+SCRIPT_FILE = Path(__file__).absolute()
+print(f'Running {SCRIPT_FILE}')
+BASE_PATH = SCRIPT_FILE.parent
+if str(BASE_PATH) not in sys.path:
+    sys.path.append(str(BASE_PATH))
+
+# We need to reload all our modules to ensure we're using the latest versions
+from ue_utils import reload_local_modules
+reload_local_modules(BASE_PATH)
 
 from jsonutils import save_as_json
 from ue_utils import find_all_species, get_cdo_from_asset, get_dcsc_from_bp, load_asset
@@ -120,8 +130,6 @@ def extract_species(bp: unreal.Object, char: unreal.PrimalDinoCharacter) -> Opti
 
 
 
-
 if __name__ == '__main__':
     main()
     unreal.log_warning(f"Finished.")
-
