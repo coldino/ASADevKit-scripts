@@ -16,7 +16,7 @@ def gather_color_data(short_bp: str, char: PrimalDinoCharacter) -> Optional[list
         return None
 
     # Convert to output format
-    output_data: list[Optional[RegionInfo]] = [{'name':name.capitalize(), 'colors':list(colors)} if name else None for name, colors in color_data]
+    output_data: list[Optional[RegionInfo]] = [{'name':name.capitalize(), 'colors':colors} if name else None for name, colors in color_data]
 
     # # Handle bad region names
     # for i, region in enumerate(output_data):
@@ -51,12 +51,12 @@ def gather_color_data(short_bp: str, char: PrimalDinoCharacter) -> Optional[list
     return output_data
 
 
-def extract_color_data(char: PrimalDinoCharacter) -> Optional[list[tuple[Optional[str], set[str]]]]:
+def extract_color_data(char: PrimalDinoCharacter) -> Optional[list[tuple[Optional[str], list[str]]]]:
     '''Gather color region definitions for a species.'''
     if char.is_corrupted:
         return None
 
-    colors: list[tuple[Optional[str], set[str]]] = list()
+    colors: list[tuple[Optional[str], list[str]]] = list()
     male_colorset: Optional[Class] = None
     female_colorset: Optional[Class] = None
 
@@ -82,16 +82,16 @@ def extract_color_data(char: PrimalDinoCharacter) -> Optional[list[tuple[Optiona
     for i in range(NUM_REGIONS):
         prevent_region = char.prevent_colorization_regions[i] # type: ignore
         if prevent_region:
-            colors.append((None, set()))
+            colors.append((None, list()))
             continue
 
         name: Optional[str] = None
-        color_names: set[str] = set()
+        color_names: list[str] = list()
 
         region: ColorSetDefinition = regions[i] # type: ignore
 
         name = region.region_name # type: ignore
-        color_names = set(map(str, region.color_entry_names))
+        color_names = list(map(str, region.color_entry_names))
 
         colors.append((name, color_names))
 
