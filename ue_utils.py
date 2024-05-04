@@ -21,7 +21,6 @@ def reload_local_modules(base_path: Path):
                 unreal.reload(name)
             except Exception as e:
                 print(f"Error reloading {mod}: {e}")
-    # [reload(mod) for mod in list(sys.modules.values()) if (path:=getattr(mod, '__file__', None)) and Path(path).is_relative_to(BASE_PATH)]
 
 
 def get_cdo_from_asset(asset: Union[unreal.Object,unreal.AssetData]) -> Optional[unreal.Object]:

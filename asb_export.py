@@ -1,5 +1,6 @@
 import sys
 import json
+from datetime import datetime
 from typing import Any, Optional
 import unreal
 from pathlib import Path
@@ -40,6 +41,8 @@ old_species_data = {species['blueprintPath']: species for species in old_raw_val
 
 
 def main():
+    start_time = datetime.now()
+
     unreal.log_warning("Loading PrimalGameData...")
     pgd = get_cdo_from_asset(load_asset('/Game/PrimalEarth/CoreBlueprints/COREMEDIA_PrimalGameData_BP'))
     if not isinstance(pgd, unreal.PrimalGameData):
@@ -108,6 +111,10 @@ def main():
 
     save_as_json(make_json_from_species(new_species_data), NEW_SPECIES_JSON, pretty=True)
     save_as_json(make_json_from_species(changed_species_data), CHANGED_SPECIES_JSON, pretty=True)
+
+    end_time = datetime.now()
+    elapsed = end_time - start_time
+    unreal.log_warning(f"Elapsed time: {elapsed}")
 
 
 def extract_species(bp: unreal.Object, char: unreal.PrimalDinoCharacter) -> Optional[dict[str, Any]]:

@@ -3,7 +3,7 @@ from typing import Any, Optional
 import unreal
 from unreal import PrimalDinoStatusComponent, PrimalDinoCharacter
 
-from consts import COLOR_REGION_WHITELIST, OUTPUT_OVERRIDES, STAT_COUNT, VARIANT_OVERRIDES
+from consts import COLOR_REGION_WHITELIST, OUTPUT_OVERRIDES, STAT_COUNT, VALUE_DEFAULTS, VARIANT_OVERRIDES
 from clean_numbers import clean_float as cf, clean_double as cd
 from species.bones import gather_damage_mults
 from species.breeding import gather_breeding_data
@@ -143,6 +143,12 @@ def values_for_species(bp: str, char: PrimalDinoCharacter, dcsc: PrimalDinoStatu
     overrides = OUTPUT_OVERRIDES.get(short_bp, None)
     if overrides:
         species.update(overrides)
+
+
+    # Remove values that match the defaults
+    for key, value in list(VALUE_DEFAULTS.items()):
+        if species.get(key, None) == value:
+            del species[key]
 
 
     return species

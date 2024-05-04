@@ -251,7 +251,6 @@ MANUAL_SPECIES = {
 				"foodConsumptionMult": 180.0634,
 				"babyFoodConsumptionMult": 510
 			},
-			"TamedBaseHealthMultiplier": 1,
 			"displayedStats": 927
 		},
 }
@@ -284,3 +283,8 @@ COLOR_OVERRIDES: dict[str, dict[int, Optional[RegionInfo]]] = {
         5: { "name": "Head/Back Highlights" },
     },
 } # type: ignore
+
+
+VALUE_DEFAULTS = {
+    'TamedBaseHealthMultiplier': 1,
+}
