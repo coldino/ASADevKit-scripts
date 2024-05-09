@@ -204,9 +204,9 @@ OUTPUT_OVERRIDES = {
 }
 
 MANUAL_SPECIES = {
-    '/Gigantoraptor/Gigantoraptor/Gigantoraptor_Character_BP.Gigantoraptor_Character_BP': {
+    '/Game/ASA/Dinos/Gigantoraptor/Gigantoraptor_Character_BP.Gigantoraptor_Character_BP': {
 			"name": "Gigantoraptor",
-			"blueprintPath": "/Gigantoraptor/Gigantoraptor/Gigantoraptor_Character_BP.Gigantoraptor_Character_BP",
+			"blueprintPath": "/Game/ASA/Dinos/Gigantoraptor/Gigantoraptor_Character_BP.Gigantoraptor_Character_BP",
 			"skipWildLevelStats": 512,
 			"fullStatsRaw": [
 				[ 770, 0.2, 0.27, 0.5, 0 ],
@@ -287,4 +287,9 @@ COLOR_OVERRIDES: dict[str, dict[int, Optional[RegionInfo]]] = {
 
 VALUE_DEFAULTS = {
     'TamedBaseHealthMultiplier': 1,
+}
+
+SPECIES_REMAPS = {
+    '/Gigantoraptor/Gigantoraptor/Gigantoraptor_Character_BP.Gigantoraptor_Character_BP':
+        '/Game/ASA/Dinos/Gigantoraptor/Gigantoraptor_Character_BP.Gigantoraptor_Character_BP',
 }

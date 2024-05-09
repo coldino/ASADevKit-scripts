@@ -19,7 +19,7 @@ reload_local_modules(BASE_PATH)
 
 from jsonutils import save_as_json
 from ue_utils import find_all_species, get_cdo_from_asset, get_dcsc_from_bp, load_asset
-from consts import MANUAL_SPECIES, SKIP_SPECIES, SKIP_SPECIES_ROOTS
+from consts import MANUAL_SPECIES, SKIP_SPECIES, SKIP_SPECIES_ROOTS, SPECIES_REMAPS
 from colors import parse_dyes
 from species.values import values_for_species
 
@@ -51,6 +51,12 @@ def main():
 
     unreal.log("Parsing dye list")
     dyes = parse_dyes(pgd.master_dye_list)
+
+    unreal.log("Calculating species remaps")
+    remaps: dict[str,str] = old_raw_values.get('remaps', {})
+    remaps.update(SPECIES_REMAPS)
+    remaps = {k: v for k, v in remaps.items() if v and k != v}
+    unreal.log(f"Species remaps: {remaps}")
 
     unreal.log_warning("Checking all species for changes...")
     new_species_data = {}
@@ -101,12 +107,13 @@ def main():
 
     def make_json_from_species(species: dict) -> dict:
         return dict(
-            version="38.690.452716",
-            format="1.15-asa",
+            version="38.690.452718",
+            format="1.16-mod-remap",
             mod=dict(id="ASA", tag="", title="Ark: Survival Ascended", shortTitle="ASA", official=True),
             species=sorted(species.values(), key=lambda x: x['blueprintPath']),
             dyeStartIndex=128,
             dyeDefinitions=dyes,
+            remaps=remaps,
         )
 
     save_as_json(make_json_from_species(new_species_data), NEW_SPECIES_JSON, pretty=True)
