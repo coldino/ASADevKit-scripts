@@ -204,55 +204,6 @@ OUTPUT_OVERRIDES = {
 }
 
 MANUAL_SPECIES = {
-    '/Game/ASA/Dinos/Gigantoraptor/Gigantoraptor_Character_BP.Gigantoraptor_Character_BP': {
-			"name": "Gigantoraptor",
-			"blueprintPath": "/Game/ASA/Dinos/Gigantoraptor/Gigantoraptor_Character_BP.Gigantoraptor_Character_BP",
-			"skipWildLevelStats": 512,
-			"fullStatsRaw": [
-				[ 770, 0.2, 0.27, 0.5, 0 ],
-				[ 350, 0.1, 0.1, 0, 0 ],
-				[ 950, 0.06, 0, 0.5, 0 ],
-				[ 150, 0.1, 0.1, 0, 0 ],
-				[ 3000, 0.1, 0.1, 0, 0.15 ],
-				None,
-				None,
-				[ 320, 0.02, 0.04, 0, 0 ],
-				[ 1, 0.05, 0.1, 0.5, 0.4 ],
-				[ 1, 0, 0.01, 0, 0 ],
-				None,
-				None
-			],
-			"colors": [
-				{ "name": "Body Main" },
-				{ "name": "Neck Main" },
-				{ "name": "Feather Tips" },
-				{ "name": "Feather Highlights" },
-				{ "name": "Legs And Beak" },
-				{ "name": "Feather Pattern" }
-			],
-			"immobilizedBy": [ "Chain Bola", "Large Bear Trap", "Plant Species Y" ],
-			"breeding": {
-				"gestationTime": 0,
-				"incubationTime": 5999.52004,
-				"eggTempMin": 26,
-				"eggTempMax": 32,
-				"maturationTime": 166666.667,
-				"matingCooldownMin": 64800,
-				"matingCooldownMax": 172800
-			},
-			"taming": {
-				"nonViolent": True,
-				"violent": False,
-				"tamingIneffectiveness": 0.06,
-				"affinityNeeded0": 6800,
-				"affinityIncreasePL": 160,
-				"torporDepletionPS0": 2.8333332,
-				"foodConsumptionBase": 0.002314,
-				"foodConsumptionMult": 180.0634,
-				"babyFoodConsumptionMult": 510
-			},
-			"displayedStats": 927
-		},
 }
 
 COLOR_REGION_WHITELIST = {
