@@ -212,10 +212,13 @@ COLOR_REGION_WHITELIST = {
     '/Gigantoraptor/Gigantoraptor/Gigantoraptor_Character_BP',
     # '/Game/ScorchedEarth/Dinos/Jerboa/Jerboa_Character_BP',
     '/Game/ScorchedEarth/Dinos/Wyvern/Wyvern_Character_BP_Lightning',
+    '/Game/ASA/Dinos/Gigantoraptor/Gigantoraptor_Character_BP',
+    '/Game/ScorchedEarth/Dinos/Phoenix/Phoenix_Character_BP',
 }
 
 COLOR_REGION_BAD_NAMES = set(map(str.lower, [
-    # '**ignore**nothing**',
+    '**ignore**nothing**',
+    '**not used**',
 ]))
 
 
