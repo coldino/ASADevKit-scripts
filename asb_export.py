@@ -53,9 +53,10 @@ def main():
     dyes = parse_dyes(pgd.master_dye_list)
 
     unreal.log("Calculating species remaps")
-    remaps: dict[str,str] = old_raw_values.get('remaps', {})
-    remaps.update(SPECIES_REMAPS)
-    remaps = {k: v for k, v in remaps.items() if v and k != v}
+    old_remaps: dict[str,str] = old_raw_values.get('remaps', {})
+    new_remaps = {k: v for k, v in SPECIES_REMAPS.items() if v and k != v}
+    # Only keep remaps that have changed
+    remaps = {k: v for k, v in new_remaps.items() if old_remaps.get(k, None) != v}
     unreal.log(f"Species remaps: {remaps}")
 
     unreal.log_warning("Checking all species for changes...")
@@ -107,7 +108,7 @@ def main():
 
     def make_json_from_species(species: dict) -> dict:
         return dict(
-            version="38.690.452718",
+            version="41.18.99",
             format="1.16-mod-remap",
             mod=dict(id="ASA", tag="", title="Ark: Survival Ascended", shortTitle="ASA", official=True),
             species=sorted(species.values(), key=lambda x: x['blueprintPath']),
