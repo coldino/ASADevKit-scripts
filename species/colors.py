@@ -18,16 +18,16 @@ def gather_color_data(short_bp: str, char: PrimalDinoCharacter) -> Optional[list
     # Convert to output format
     output_data: list[Optional[RegionInfo]] = [{'name':name.capitalize(), 'colors':colors} if name else None for name, colors in color_data]
 
-    # # Handle bad region names
-    # for i, region in enumerate(output_data):
-    #     if region is None:
-    #         continue
-    #     region_name = region.get('name', None)
-    #     if region_name is None:
-    #         continue
-    #     region_name = region_name.lower()
-    #     if region_name in COLOR_REGION_BAD_NAMES:
-    #         output_data[i] = None
+    # Handle bad region names
+    for i, region in enumerate(output_data):
+        if region is None:
+            continue
+        region_name = region.get('name', None)
+        if region_name is None:
+            continue
+        region_name = region_name.lower()
+        if region_name.lower() in COLOR_REGION_BAD_NAMES:
+            output_data[i] = None
 
     # Apply any overrides
     overrides = COLOR_OVERRIDES.get(short_bp, None)
