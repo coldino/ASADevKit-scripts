@@ -16,3 +16,10 @@ within the UE project.
 
 For VSCode this is done via the `python.autoComplete.extraPaths` and `python.analysis.extraPaths`
 settings in `.vscode/settings.json`. Unfortunately this means hardcoded paths within the repository currently.
+
+
+## Pushing changes
+
+```
+python -m import --skip-push /d/Work/Gms/Ark/ASADevKit-scripts/data/changed_values.json output/data/asb/ASA-values.json
+```

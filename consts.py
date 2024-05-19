@@ -203,7 +203,94 @@ OUTPUT_OVERRIDES = {
     },
 }
 
+# B     MaxStatusValues
+# Iw    AmountMaxGainedPerLevelUpValue
+# Id    AmountMaxGainedPerLevelUpValueTamed
+# Ta    TamingMaxStatAdditions
+# Tm    TamingMaxStatMultipliers
+
 MANUAL_SPECIES = {
+    "/Game/ASA/Dinos/Xiphactinus/Dinos/Xiphactinus_Character_BP_ASA.Xiphactinus_Character_BP_ASA": {
+        "blueprintPath": "/Game/ASA/Dinos/Xiphactinus/Dinos/Xiphactinus_Character_BP_ASA.Xiphactinus_Character_BP_ASA",
+        "name": "Xiphactinus",
+        "fullStatsRaw": [
+            [ 450, 0.2, 0.27, 0.3, 0 ],
+            [ 420, 0.1, 0.1, 0, 0 ],
+            [ 1100, 0.06, 0, 0.5, 0 ],
+            [ 150, 0, 0, 0, 0 ],
+            [ 2000, 0.1, 0.1, 0, 0.15 ],
+            None,
+            None,
+            [ 300, 0.02, 0.04, 0, 0 ],
+            [ 1, 0.05, 0.1, 1, 0.4 ],
+            [ 1, 0, 0, 0.2, 0 ],
+            None,
+            None
+        ],
+        "breeding": {
+            "gestationTime": 0,
+            "incubationTime": 17998.5601,
+            "maturationTime": 200000,
+            "matingCooldownMin": 64800,
+            "matingCooldownMax": 172800
+        },
+        "taming": {
+            "nonViolent": False,
+            "violent": True,
+        },
+		"displayedStats": 927,
+        "skipWildLevelStats": 520,
+        "colors": [
+            { "name": "Base color" },
+            None,
+            None,
+            None,
+            { "name": "Spine" },
+            { "name": "Belly and fins" },
+        ],
+    },
+    "/Game/ASA/Dinos/Ceratosaurus/Dinos/Ceratosaurus_Character_BP_ASA.Ceratosaurus_Character_BP_ASA": {
+        "blueprintPath": "/Game/ASA/Dinos/Ceratosaurus/Dinos/Ceratosaurus_Character_BP_ASA.Ceratosaurus_Character_BP_ASA",
+        "name": "Ceratosaurus",
+        "fullStatsRaw": [
+            [ 650, 0.2, 0.27, 0.5, 0 ],
+            [ 500, 0.1, 0.1, 0, 0 ],
+            [ 500, 0.06, 0, 0.5, 0 ],
+            [ 150, 0.1, 0.1, 0, 0 ],
+            [ 6000, 0.1, 0.1, 0, 0 ],
+            None,
+            None,
+            [ 550, 0.02, 0.04, 0, 0 ],
+            [ 1, 0.05, 0.1, 0.5, 0.4 ],
+            [ 1, 0, 0, 0, 0 ],
+            None,
+            None,
+        ],
+        "breeding": {
+            "gestationTime": 0,
+            "incubationTime": 17998.5601,
+            "eggTempMin": 33,
+            "eggTempMax": 33,
+            "maturationTime": 476190.476,
+            "matingCooldownMin": 64800,
+            "matingCooldownMax": 172800
+        },
+        "taming": {
+            "nonViolent": True,
+            "violent": False,
+        },
+		"displayedStats": 927,
+        "skipWildLevelStats": 512,
+        "colors": [
+            { "name": "Accents" },
+            None,
+            None,
+            None,
+            { "name": "Spikes" },
+            { "name": "Body" },
+        ],
+        "immobilizedBy": [ "Chain Bola", "Large Bear Trap" ],
+    },
 }
 
 COLOR_REGION_WHITELIST = {
