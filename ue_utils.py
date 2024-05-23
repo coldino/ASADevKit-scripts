@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 from importlib import reload
-from typing import Iterator, List, Optional, Union, cast
+from typing import Callable, Iterator, List, Optional, Union, cast
 
 import unreal
 
@@ -64,19 +64,22 @@ def is_creature(default: unreal.Object) -> bool:
     return isinstance(default, unreal.PrimalDinoCharacter)
 
 
-def find_all_species() -> Iterator[tuple[unreal.Blueprint, unreal.PrimalDinoCharacter]]:
+def find_all_species(filter_species: Optional[Callable[[str], bool]]) -> Iterator[tuple[unreal.Blueprint, unreal.PrimalDinoCharacter]]:
     # Using Dino_Character_BP_C instead of PrimalDinoCharacter skips some unwanted things like vehicles and scripted boss spawns
     filter = unreal.ARFilter(
         class_paths=[unreal.TopLevelAssetPath('/Game/PrimalEarth/CoreBlueprints/Dino_Character_BP', 'Dino_Character_BP_C')],
         recursive_classes=True
     )
     all_species: list[unreal.AssetData] = list(filter.get_blueprint_assets())
+    if filter_species:
+        all_species = [species for species in all_species if filter_species(str(species.package_name))]
 
     with unreal.ScopedSlowTask(len(all_species), "Exporting all species") as slow_task:
         slow_task.make_dialog_delayed(2, True)
 
         for asset_data in all_species:
             slow_task.enter_progress_frame(1, f"Checking {str(asset_data.package_path)}")
+
             asset = load_asset(asset_data)
             cdo = get_cdo_from_asset(asset)
             if not cdo:

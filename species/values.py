@@ -51,12 +51,10 @@ def values_for_species(bp: str, char: PrimalDinoCharacter, dcsc: PrimalDinoStatu
     is_flyer = bool(char.is_flyer_dino)
     if is_flyer:
         species['isFlyer'] = True
-    normal_stats = gather_stat_data(alt_dcsc, dcsc, is_flyer)
-    if any(short_bp.startswith(path) for path in SKIP_TROODONISMS_PATHS):
-        alt_stats = None
-    else:
-        alt_stats = normal_stats
-        normal_stats = gather_stat_data(dcsc, dcsc, is_flyer)
+    normal_stats = gather_stat_data(dcsc, dcsc, is_flyer)
+    alt_stats = None
+    if not any(short_bp.startswith(path) for path in SKIP_TROODONISMS_PATHS):
+        alt_stats = gather_stat_data(alt_dcsc, dcsc, is_flyer)
         alt_stats = reduce_alt_stats(normal_stats, alt_stats)
     species['fullStatsRaw'] = normal_stats
     if alt_stats:

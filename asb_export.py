@@ -62,7 +62,7 @@ def main(version: str):
     unreal.log_warning("Checking all species for changes...")
     new_species_data = {}
     changed_species_data = {}
-    for bp, char in find_all_species():
+    for bp, char in find_all_species(filter_species):
         unreal.log_warning(bp.get_path_name().split('.')[0])
         unreal.log_flush()
 
@@ -82,8 +82,10 @@ def main(version: str):
             # Collect changes per key
             for key, new_value in new_data.items():
                 old_value = old_data.get(key, None)
+                old_value = sanitise_old_value(old_value, key)
                 if new_value != old_value:
                     changes[key] = new_value
+                    print('(changed)')
 
             if changes:
                 changes = {
@@ -125,24 +127,33 @@ def main(version: str):
     unreal.log_warning(f"Elapsed time: {elapsed}")
 
 
-def extract_species(bp: unreal.Blueprint, char: unreal.PrimalDinoCharacter) -> Optional[dict[str, Any]]:
-    bp_name = bp.get_path_name()
-    short_bp = bp_name.split('.')[0]
-
+def filter_species(short_bp: str):
     # Only process whitelisted paths
     if WHITELIST_PATHS and not any(short_bp.startswith(whitelist) for whitelist in WHITELIST_PATHS):
-        return None
+        return False
 
     # Check if we should skip this species
     if short_bp in SKIP_SPECIES:
-        unreal.log(f"(skipped)")
-        return None
+        return False
     for skip_root in SKIP_SPECIES_ROOTS:
         if short_bp.startswith(skip_root):
-            unreal.log(f"(skipped root)")
-            return None
+            return False
 
-    dcsc, alt_dcsc = get_dcsc_from_character_bp(bp)
+    return True
+
+
+def sanitise_old_value(value: Any, key: str) -> Any:
+    if key == 'altBaseStats':
+        # Convert string keys to integers
+        value = {int(k): v for k, v in value.items()}
+        return value
+
+    return value
+
+
+def extract_species(bp: unreal.Blueprint, char: unreal.PrimalDinoCharacter) -> Optional[dict[str, Any]]:
+    bp_name = bp.get_path_name()
+    alt_dcsc, dcsc = get_dcsc_from_character_bp(bp)
     if not dcsc or not alt_dcsc:
         unreal.log_error("Unable to select DCSC")
         return None

@@ -278,15 +278,15 @@ SPECIES_REMAPS = {
 }
 
 SKIP_TROODONISMS_PATHS = (
-    '/Game/EndGame/',
-    '/Game/PrimalEarth/Dinos/Bigfoot/',
-    '/Game/Genesis/Dinos/BiomeVariants/VR/',
-    '/Game/PrimalEarth/Dinos/Dimorphodon/Dimorph_Character_BP_Aggressive',
-    '/Game/PrimalEarth/Dinos/Dragon/',
-    '/Game/PrimalEarth/Dinos/Gorilla/',
-    '/Game/PrimalEarth/Dinos/Monkey/Monkey_Character_BP_Aggressive',
-    '/Game/PrimalEarth/Dinos/Ptero/Ptero_Minion',
-    '/Game/PrimalEarth/Dinos/Spider-Large/',
-    '/Game/PrimalEarth/Dinos/Spider-Small/SpiderS_Character_BP_Aggressive',
-    '/Game/ScorchedEarth/Dinos/Manticore/',
+    # '/Game/EndGame/',
+    # '/Game/PrimalEarth/Dinos/Bigfoot/',
+    # '/Game/Genesis/Dinos/BiomeVariants/VR/',
+    # '/Game/PrimalEarth/Dinos/Dimorphodon/Dimorph_Character_BP_Aggressive',
+    # '/Game/PrimalEarth/Dinos/Dragon/',
+    # '/Game/PrimalEarth/Dinos/Gorilla/',
+    # '/Game/PrimalEarth/Dinos/Monkey/Monkey_Character_BP_Aggressive',
+    # '/Game/PrimalEarth/Dinos/Ptero/Ptero_Minion',
+    # '/Game/PrimalEarth/Dinos/Spider-Large/',
+    # '/Game/PrimalEarth/Dinos/Spider-Small/SpiderS_Character_BP_Aggressive',
+    # '/Game/ScorchedEarth/Dinos/Manticore/',
 )
