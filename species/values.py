@@ -3,7 +3,7 @@ from typing import Any, Optional
 import unreal
 from unreal import PrimalDinoStatusComponent, PrimalDinoCharacter
 
-from consts import COLOR_REGION_WHITELIST, OUTPUT_OVERRIDES, STAT_COUNT, VALUE_DEFAULTS, VARIANT_OVERRIDES
+from consts import COLOR_REGION_WHITELIST, OUTPUT_OVERRIDES, SKIP_TROODONISMS_PATHS, STAT_COUNT, VALUE_DEFAULTS, VARIANT_OVERRIDES
 from clean_numbers import clean_float as cf, clean_double as cd
 from species.bones import gather_damage_mults
 from species.breeding import gather_breeding_data
@@ -12,7 +12,7 @@ from species.colors import gather_color_data
 from species.stats import DEFAULT_IMPRINT_MULTS, DEFAULT_MAX_STATUS_VALUES, gather_stat_data
 
 
-def values_for_species(bp: str, char: PrimalDinoCharacter, dcsc: PrimalDinoStatusComponent) -> Optional[dict[str, str]]:
+def values_for_species(bp: str, char: PrimalDinoCharacter, dcsc: PrimalDinoStatusComponent, alt_dcsc: PrimalDinoStatusComponent) -> Optional[dict[str, str]]:
     unreal.log(f'Using Character: {char.get_full_name()}')
     unreal.log(f'Using DCSC: {dcsc.get_full_name()}')
 
@@ -51,8 +51,16 @@ def values_for_species(bp: str, char: PrimalDinoCharacter, dcsc: PrimalDinoStatu
     is_flyer = bool(char.is_flyer_dino)
     if is_flyer:
         species['isFlyer'] = True
-    normal_stats = gather_stat_data(dcsc, dcsc, is_flyer)
+    normal_stats = gather_stat_data(alt_dcsc, dcsc, is_flyer)
+    if any(short_bp.startswith(path) for path in SKIP_TROODONISMS_PATHS):
+        alt_stats = None
+    else:
+        alt_stats = normal_stats
+        normal_stats = gather_stat_data(dcsc, dcsc, is_flyer)
+        alt_stats = reduce_alt_stats(normal_stats, alt_stats)
     species['fullStatsRaw'] = normal_stats
+    if alt_stats:
+        species['altBaseStats'] = alt_stats
 
 
     # Imprint multipliers
@@ -152,3 +160,8 @@ def values_for_species(bp: str, char: PrimalDinoCharacter, dcsc: PrimalDinoStatu
 
 
     return species
+
+
+def reduce_alt_stats(normal_stats, alt_stats):
+    output = {i: a[0] for (i, (n, a)) in enumerate(zip(normal_stats, alt_stats)) if n and a and n[0] != a[0]}
+    return output if output else None

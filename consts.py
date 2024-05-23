@@ -6,7 +6,12 @@ NUM_REGIONS = 6
 IS_PERCENT_STAT = (0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1)
 
 
+WHITELIST_PATHS = (
+    '/',
+    # '/Game/ASA/Dinos/Ceratosaurus/',
+)
 SKIP_SPECIES_ROOTS = [
+    '/SOTFGameModeMod',
     '/cfeditor',
     '/Game/PrimalEarth/CoreBlueprints/Dino_Character_BP_', # a whole bunch of bases
 ]
@@ -334,3 +339,17 @@ SPECIES_REMAPS = {
     '/Gigantoraptor/Gigantoraptor/Gigantoraptor_Character_BP.Gigantoraptor_Character_BP':
         '/Game/ASA/Dinos/Gigantoraptor/Gigantoraptor_Character_BP.Gigantoraptor_Character_BP',
 }
+
+SKIP_TROODONISMS_PATHS = (
+    '/Game/EndGame/',
+    '/Game/PrimalEarth/Dinos/Bigfoot/',
+    '/Game/Genesis/Dinos/BiomeVariants/VR/',
+    '/Game/PrimalEarth/Dinos/Dimorphodon/Dimorph_Character_BP_Aggressive',
+    '/Game/PrimalEarth/Dinos/Dragon/',
+    '/Game/PrimalEarth/Dinos/Gorilla/',
+    '/Game/PrimalEarth/Dinos/Monkey/Monkey_Character_BP_Aggressive',
+    '/Game/PrimalEarth/Dinos/Ptero/Ptero_Minion',
+    '/Game/PrimalEarth/Dinos/Spider-Large/',
+    '/Game/PrimalEarth/Dinos/Spider-Small/SpiderS_Character_BP_Aggressive',
+    '/Game/ScorchedEarth/Dinos/Manticore/',
+)

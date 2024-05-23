@@ -18,8 +18,8 @@ from ue_utils import reload_local_modules
 reload_local_modules(BASE_PATH)
 
 from jsonutils import save_as_json
-from ue_utils import find_all_species, get_cdo_from_asset, get_dcsc_from_bp, load_asset
-from consts import MANUAL_SPECIES, SKIP_SPECIES, SKIP_SPECIES_ROOTS, SPECIES_REMAPS
+from ue_utils import find_all_species, get_cdo_from_asset, get_dcsc_from_character_bp, load_asset
+from consts import MANUAL_SPECIES, SKIP_SPECIES, SKIP_SPECIES_ROOTS, SPECIES_REMAPS, WHITELIST_PATHS
 from colors import parse_dyes
 from species.values import values_for_species
 
@@ -125,9 +125,13 @@ def main():
     unreal.log_warning(f"Elapsed time: {elapsed}")
 
 
-def extract_species(bp: unreal.Object, char: unreal.PrimalDinoCharacter) -> Optional[dict[str, Any]]:
+def extract_species(bp: unreal.Blueprint, char: unreal.PrimalDinoCharacter) -> Optional[dict[str, Any]]:
     bp_name = bp.get_path_name()
     short_bp = bp_name.split('.')[0]
+
+    # Only process whitelisted paths
+    if WHITELIST_PATHS and not any(short_bp.startswith(whitelist) for whitelist in WHITELIST_PATHS):
+        return None
 
     # Check if we should skip this species
     if short_bp in SKIP_SPECIES:
@@ -138,12 +142,12 @@ def extract_species(bp: unreal.Object, char: unreal.PrimalDinoCharacter) -> Opti
             unreal.log(f"(skipped root)")
             return None
 
-    dcsc = get_dcsc_from_bp(bp)
-    if not dcsc:
+    dcsc, alt_dcsc = get_dcsc_from_character_bp(bp)
+    if not dcsc or not alt_dcsc:
         unreal.log_error("Unable to select DCSC")
         return None
 
-    species_data = values_for_species(bp_name, char, dcsc)
+    species_data = values_for_species(bp_name, char, dcsc, alt_dcsc)
     if not species_data:
         unreal.log_error("Skipping species")
         return None

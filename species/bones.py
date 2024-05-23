@@ -20,6 +20,4 @@ def gather_damage_mults(char: PrimalDinoCharacter) -> Optional[dict[str, float]]
         mult = cf(bone_info.damage_multiplier)
         result[name] = mult
 
-    print(result)
-
     return result
