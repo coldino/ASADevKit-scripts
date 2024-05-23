@@ -215,87 +215,6 @@ OUTPUT_OVERRIDES = {
 # Tm    TamingMaxStatMultipliers
 
 MANUAL_SPECIES = {
-    "/Game/ASA/Dinos/Xiphactinus/Dinos/Xiphactinus_Character_BP_ASA.Xiphactinus_Character_BP_ASA": {
-        "blueprintPath": "/Game/ASA/Dinos/Xiphactinus/Dinos/Xiphactinus_Character_BP_ASA.Xiphactinus_Character_BP_ASA",
-        "name": "Xiphactinus",
-        "fullStatsRaw": [
-            [ 450, 0.2, 0.27, 0.3, 0 ],
-            [ 420, 0.1, 0.1, 0, 0 ],
-            [ 1100, 0.06, 0, 0.5, 0 ],
-            [ 150, 0, 0, 0, 0 ],
-            [ 2000, 0.1, 0.1, 0, 0.15 ],
-            None,
-            None,
-            [ 300, 0.02, 0.04, 0, 0 ],
-            [ 1, 0.05, 0.1, 1, 0.4 ],
-            [ 1, 0, 0, 0.2, 0 ],
-            None,
-            None
-        ],
-        "breeding": {
-            "gestationTime": 0,
-            "incubationTime": 17998.5601,
-            "maturationTime": 200000,
-            "matingCooldownMin": 64800,
-            "matingCooldownMax": 172800
-        },
-        "taming": {
-            "nonViolent": False,
-            "violent": True,
-        },
-		"displayedStats": 927,
-        "skipWildLevelStats": 520,
-        "colors": [
-            { "name": "Base color" },
-            None,
-            None,
-            None,
-            { "name": "Spine" },
-            { "name": "Belly and fins" },
-        ],
-    },
-    "/Game/ASA/Dinos/Ceratosaurus/Dinos/Ceratosaurus_Character_BP_ASA.Ceratosaurus_Character_BP_ASA": {
-        "blueprintPath": "/Game/ASA/Dinos/Ceratosaurus/Dinos/Ceratosaurus_Character_BP_ASA.Ceratosaurus_Character_BP_ASA",
-        "name": "Ceratosaurus",
-        "fullStatsRaw": [
-            [ 650, 0.2, 0.27, 0.5, 0 ],
-            [ 500, 0.1, 0.1, 0, 0 ],
-            [ 500, 0.06, 0, 0.5, 0 ],
-            [ 150, 0.1, 0.1, 0, 0 ],
-            [ 6000, 0.1, 0.1, 0, 0 ],
-            None,
-            None,
-            [ 550, 0.02, 0.04, 0, 0 ],
-            [ 1, 0.05, 0.1, 0.5, 0.4 ],
-            [ 1, 0, 0, 0, 0 ],
-            None,
-            None,
-        ],
-        "breeding": {
-            "gestationTime": 0,
-            "incubationTime": 17998.5601,
-            "eggTempMin": 33,
-            "eggTempMax": 33,
-            "maturationTime": 476190.476,
-            "matingCooldownMin": 64800,
-            "matingCooldownMax": 172800
-        },
-        "taming": {
-            "nonViolent": True,
-            "violent": False,
-        },
-		"displayedStats": 927,
-        "skipWildLevelStats": 512,
-        "colors": [
-            { "name": "Accents" },
-            None,
-            None,
-            None,
-            { "name": "Spikes" },
-            { "name": "Body" },
-        ],
-        "immobilizedBy": [ "Chain Bola", "Large Bear Trap" ],
-    },
 }
 
 COLOR_REGION_WHITELIST = {
@@ -306,6 +225,8 @@ COLOR_REGION_WHITELIST = {
     '/Game/ScorchedEarth/Dinos/Wyvern/Wyvern_Character_BP_Lightning',
     '/Game/ASA/Dinos/Gigantoraptor/Gigantoraptor_Character_BP',
     '/Game/ScorchedEarth/Dinos/Phoenix/Phoenix_Character_BP',
+    '/Game/ASA/Dinos/Xiphactinus/Dinos/Xiphactinus_Character_BP_ASA',
+    '/Game/ASA/Dinos/Ceratosaurus/Dinos/Ceratosaurus_Character_BP_ASA',
 }
 
 COLOR_REGION_BAD_NAMES = set(map(str.lower, [
@@ -327,6 +248,22 @@ COLOR_OVERRIDES: dict[str, dict[int, Optional[RegionInfo]]] = {
         3: None,
         4: { "name": "Body Rings" },
         5: { "name": "Head/Back Highlights" },
+    },
+    '/Game/ASA/Dinos/Ceratosaurus/Dinos/Ceratosaurus_Character_BP_ASA': {
+        0: { "name": "Accents" },
+        1: None,
+        2: None,
+        3: None,
+        4: { "name": "Spikes" },
+        5: { "name": "Body" },
+    },
+    '/Game/ASA/Dinos/Xiphactinus/Dinos/Xiphactinus_Character_BP_ASA': {
+        0: { "name": "Base color" },
+        1: None,
+        2: None,
+        3: None,
+        4: { "name": "Spine" },
+        5: { "name": "Belly and fins" },
     },
 } # type: ignore
 
