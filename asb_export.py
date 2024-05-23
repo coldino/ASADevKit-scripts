@@ -40,7 +40,7 @@ with open(CURRENT_VALUES) as f:
 old_species_data = {species['blueprintPath']: species for species in old_raw_values['species']}
 
 
-def main():
+def main(version: str):
     start_time = datetime.now()
 
     unreal.log_warning("Loading PrimalGameData...")
@@ -108,7 +108,7 @@ def main():
 
     def make_json_from_species(species: dict) -> dict:
         return dict(
-            version="41.18.99",
+            version=version,
             format="1.16-mod-remap",
             mod=dict(id="ASA", tag="", title="Ark: Survival Ascended", shortTitle="ASA", official=True),
             species=sorted(species.values(), key=lambda x: x['blueprintPath']),
@@ -157,5 +157,9 @@ def extract_species(bp: unreal.Blueprint, char: unreal.PrimalDinoCharacter) -> O
 
 
 if __name__ == '__main__':
-    main()
+    version = sys.argv[-1]
+    if version.count('.') != 2 or not all(part.isdigit() for part in version.split('.')):
+        raise ValueError(f"Invalid version: {version}")
+
+    main(version)
     unreal.log_warning(f"Finished.")
