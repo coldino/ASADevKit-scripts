@@ -215,6 +215,42 @@ OUTPUT_OVERRIDES = {
 # Tm    TamingMaxStatMultipliers
 
 MANUAL_SPECIES = {
+    "/Game/ASA/Dinos/Shastasaurus/Shastasaurus_Character_BP.Shastasaurus_Character_BP": { # Direct copy of the Mosa's stats
+        "blueprintPath": "/Game/ASA/Dinos/Shastasaurus/Shastasaurus_Character_BP.Shastasaurus_Character_BP",
+        "name": "Shastasaurus",
+        "fullStatsRaw": [
+            [ 3600, 0.12, 0.21, 0.3, 0 ],
+            [ 400, 0.1, 0.1, 0, 0 ],
+            [ 3000, 0.06, 0, 0.5, 0 ],
+            [ 150, 0.1, 0.1, 0, 0 ],
+            [ 8000, 0.1, 0.1, 0, 0.15 ],
+            None,
+            None,
+            [ 1300, 0.02, 0.04, 0, 0 ],
+            [ 1, 0.05, 0.1, 0.65, 0.4 ],
+            [ 1, 0, 0.005, 0, 0 ],
+            None,
+            None
+        ],
+    },
+    "/Game/ASA/Dinos/FireLion/FireLion_Character_BP.FireLion_Character_BP": { # Shadowmane only with different base stats
+        "blueprintPath": "/Game/ASA/Dinos/FireLion/FireLion_Character_BP.FireLion_Character_BP",
+        "name": "Pyromane",
+        "fullStatsRaw": [
+            [ 600, 0.2, 0.27, 0.5, 0 ],
+            [ 350, 0.1, 0.1, 0, 0 ],
+            [ 500, 0.06, 0, 0.5, 0 ],
+            [ 150, 0.1, 0.1, 0, 0 ],
+            [ 1000, 0.1, 0.1, 0, 0 ],
+            None,
+            None,
+            [ 300, 0.02, 0.04, 0, 0 ],
+            [ 1, 0.05, 0.1, 0.5, 0.4 ],
+            [ 1, 0, 0.01, 0, 0 ],
+            None,
+            None
+        ]
+    },
 }
 
 COLOR_REGION_WHITELIST = {
@@ -227,11 +263,13 @@ COLOR_REGION_WHITELIST = {
     '/Game/ScorchedEarth/Dinos/Phoenix/Phoenix_Character_BP',
     '/Game/ASA/Dinos/Xiphactinus/Dinos/Xiphactinus_Character_BP_ASA',
     '/Game/ASA/Dinos/Ceratosaurus/Dinos/Ceratosaurus_Character_BP_ASA',
+    # '/Game/PrimalEarth/Dinos/Troodon/Troodon_Character_BP', # requested but incorrect I think
 }
 
 COLOR_REGION_BAD_NAMES = set(map(str.lower, [
     '**ignore**nothing**',
     '**not used**',
+    'Not used',
 ]))
 
 
