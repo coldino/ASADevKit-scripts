@@ -206,6 +206,24 @@ OUTPUT_OVERRIDES = {
     '/Game/EndGame/Dinos/Endboss/EndbossSpider/EndBossSpiderL_Character_BP_Hard': {
         "name": 'Broodmother Lysrix',
     },
+    '/Game/PrimalEarth/Dinos/Spider-Large/SpiderL_Character_BP_TheCenter': {
+        "name": 'Broodmother Lysrix',
+    },
+    '/Game/PrimalEarth/Dinos/Spider-Large/SpiderL_Character_BP_TheCenterHard': {
+        "name": 'Broodmother Lysrix',
+    },
+    '/Game/PrimalEarth/Dinos/Spider-Large/SpiderL_Character_BP_TheCenterMedium': {
+        "name": 'Broodmother Lysrix',
+    },
+    '/Game/PrimalEarth/Dinos/Gorilla/Gorilla_Character_BP_TheCenter': {
+        "name": 'Megapithecus',
+    },
+    '/Game/PrimalEarth/Dinos/Gorilla/Gorilla_Character_BP_TheCenter_Hard': {
+        "name": 'Megapithecus',
+    },
+    '/Game/PrimalEarth/Dinos/Gorilla/Gorilla_Character_BP_TheCenter_Medium': {
+        "name": 'Megapithecus',
+    },
 }
 
 # B     MaxStatusValues
@@ -215,42 +233,6 @@ OUTPUT_OVERRIDES = {
 # Tm    TamingMaxStatMultipliers
 
 MANUAL_SPECIES = {
-    "/Game/ASA/Dinos/Shastasaurus/Shastasaurus_Character_BP.Shastasaurus_Character_BP": { # Direct copy of the Mosa's stats
-        "blueprintPath": "/Game/ASA/Dinos/Shastasaurus/Shastasaurus_Character_BP.Shastasaurus_Character_BP",
-        "name": "Shastasaurus",
-        "fullStatsRaw": [
-            [ 3600, 0.12, 0.21, 0.3, 0 ],
-            [ 400, 0.1, 0.1, 0, 0 ],
-            [ 3000, 0.06, 0, 0.5, 0 ],
-            [ 150, 0.1, 0.1, 0, 0 ],
-            [ 8000, 0.1, 0.1, 0, 0.15 ],
-            None,
-            None,
-            [ 1300, 0.02, 0.04, 0, 0 ],
-            [ 1, 0.05, 0.1, 0.65, 0.4 ],
-            [ 1, 0, 0.005, 0, 0 ],
-            None,
-            None
-        ],
-    },
-    "/Game/ASA/Dinos/FireLion/FireLion_Character_BP.FireLion_Character_BP": { # Shadowmane only with different base stats
-        "blueprintPath": "/Game/ASA/Dinos/FireLion/FireLion_Character_BP.FireLion_Character_BP",
-        "name": "Pyromane",
-        "fullStatsRaw": [
-            [ 600, 0.2, 0.27, 0.5, 0 ],
-            [ 350, 0.1, 0.1, 0, 0 ],
-            [ 500, 0.06, 0, 0.5, 0 ],
-            [ 150, 0.1, 0.1, 0, 0 ],
-            [ 1000, 0.1, 0.1, 0, 0 ],
-            None,
-            None,
-            [ 300, 0.02, 0.04, 0, 0 ],
-            [ 1, 0.05, 0.1, 0.5, 0.4 ],
-            [ 1, 0, 0.01, 0, 0 ],
-            None,
-            None
-        ]
-    },
 }
 
 COLOR_REGION_WHITELIST = {
