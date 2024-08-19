@@ -3,7 +3,7 @@ from typing import Any, Optional
 import unreal
 from unreal import PrimalDinoStatusComponent, PrimalDinoCharacter
 
-from consts import COLOR_REGION_WHITELIST, OUTPUT_OVERRIDES, SKIP_TROODONISMS_PATHS, STAT_COUNT, VALUE_DEFAULTS, VARIANT_OVERRIDES
+from consts import OUTPUT_OVERRIDES, SKIP_TROODONISMS_PATHS, STAT_COUNT, VALUE_DEFAULTS, VARIANT_OVERRIDES
 from clean_numbers import clean_float as cf, clean_double as cd
 from species.bones import gather_damage_mults
 from species.breeding import gather_breeding_data
@@ -16,7 +16,9 @@ def values_for_species(bp: str, char: PrimalDinoCharacter, dcsc: PrimalDinoStatu
     unreal.log(f'Using Character: {char.get_full_name()}')
     unreal.log(f'Using DCSC: {dcsc.get_full_name()}')
 
-    short_bp = bp.split('.')[0]
+    # Skip vehicles
+    if char.is_vehicle:
+        return None
 
     # Having no name or tag is an indication that this is an intermediate class, not a spawnable species
     name = (str(char.descriptive_name) or str(char.dino_name_tag)).strip()
@@ -30,15 +32,10 @@ def values_for_species(bp: str, char: PrimalDinoCharacter, dcsc: PrimalDinoStatu
         unreal.log(f"Species {char.get_full_name()} has no overridden stats - skipping")
         return None
 
-    if bp.endswith('_C'):
-        bp = bp[:-2]
 
     species: dict[str, Any] = dict(blueprintPath=bp, name=name)
-
-
-    # Skip vehicles
-    if char.is_vehicle:
-        return None
+    short_bp = bp.split('.')[0]
+    bp = bp.removesuffix('_C')
 
 
     # Variants
@@ -73,8 +70,6 @@ def values_for_species(bp: str, char: PrimalDinoCharacter, dcsc: PrimalDinoStatu
             unique_mults = True
 
     if unique_mults:
-        # print(f'Default imprint mults: {DEFAULT_IMPRINT_MULTS}')
-        # print(f'Unique imprint mults: {stat_imprint_mults}')
         species['statImprintMult'] = stat_imprint_mults
 
 
@@ -139,10 +134,9 @@ def values_for_species(bp: str, char: PrimalDinoCharacter, dcsc: PrimalDinoStatu
 
 
     # Color data
-    if short_bp in COLOR_REGION_WHITELIST:
-        colors = gather_color_data(short_bp, char)
-        if colors:
-            species['colors'] = colors
+    colors = gather_color_data(short_bp, char)
+    if colors:
+        species['colors'] = colors
 
 
     # General output overrides

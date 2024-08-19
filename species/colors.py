@@ -1,15 +1,12 @@
-from typing import Any, Optional, TypedDict
+from typing import Optional
+
 import unreal
 from unreal import PrimalDinoCharacter, PrimalColorSet, ColorSetDefinition, Class
 
-from consts import COLOR_REGION_BAD_NAMES, COLOR_REGION_WHITELIST, COLOR_OVERRIDES, NUM_REGIONS, RegionInfo
+from consts import COLOR_REGION_BAD_NAMES, COLOR_OVERRIDES, NUM_REGIONS, RegionInfo
 
 
 def gather_color_data(short_bp: str, char: PrimalDinoCharacter) -> Optional[list[Optional[RegionInfo]]]:
-    # Only do this for whitelisted species
-    if short_bp not in COLOR_REGION_WHITELIST:
-        return None
-
     # Extract raw data
     color_data = extract_color_data(char)
     if not color_data:
@@ -45,8 +42,6 @@ def gather_color_data(short_bp: str, char: PrimalDinoCharacter) -> Optional[list
                 print(f"Overriding region {i} with {override}")
                 region = override
             output_data[i] = region
-        # print(output_data)
-        # raise KeyboardInterrupt
 
     return output_data
 

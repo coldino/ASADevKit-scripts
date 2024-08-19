@@ -16,7 +16,7 @@ SKIP_SPECIES_ROOTS = [
     '/Game/PrimalEarth/CoreBlueprints/Dino_Character_BP_', # a whole bunch of bases
 ]
 
-SKIP_SPECIES = [
+SKIP_SPECIES = [ # most of these are intermediate classes, previously excluded in Purlovia by overrides
     '/Game/Aberration/Boss/Rockwell/Rockwell_Character_BP',
     '/Game/Aberration/Boss/RockwellTentacle/RockwellTentacle_Character_BP',
     '/Game/EndGame/Dinos/Endboss/EndBoss_Character',
@@ -236,15 +236,9 @@ MANUAL_SPECIES = {
 }
 
 COLOR_REGION_WHITELIST = {
-    '/Game/ASA/Dinos/Fasolasuchus/Fasola_Character_BP',
-    '/Game/Packs/Frontier/Dinos/Oasisaur/Oasisaur_Character_BP',
-    '/Gigantoraptor/Gigantoraptor/Gigantoraptor_Character_BP',
-    # '/Game/ScorchedEarth/Dinos/Jerboa/Jerboa_Character_BP',
     '/Game/ScorchedEarth/Dinos/Wyvern/Wyvern_Character_BP_Lightning',
-    '/Game/ASA/Dinos/Gigantoraptor/Gigantoraptor_Character_BP',
     '/Game/ScorchedEarth/Dinos/Phoenix/Phoenix_Character_BP',
-    '/Game/ASA/Dinos/Xiphactinus/Dinos/Xiphactinus_Character_BP_ASA',
-    '/Game/ASA/Dinos/Ceratosaurus/Dinos/Ceratosaurus_Character_BP_ASA',
+    # '/Game/ScorchedEarth/Dinos/Jerboa/Jerboa_Character_BP', # ???
     # '/Game/PrimalEarth/Dinos/Troodon/Troodon_Character_BP', # requested but incorrect I think
 }
 
@@ -252,6 +246,7 @@ COLOR_REGION_BAD_NAMES = set(map(str.lower, [
     '**ignore**nothing**',
     '**not used**',
     'Not used',
+    'N/A',
 ]))
 
 
@@ -284,6 +279,14 @@ COLOR_OVERRIDES: dict[str, dict[int, Optional[RegionInfo]]] = {
         3: None,
         4: { "name": "Spine" },
         5: { "name": "Belly and fins" },
+    },
+    '/Game/ASA/Dinos/FireLion/FireLion_Character_BP': {
+        0: None,
+        1: None,
+        2: { "name": "Main body" },
+        3: { "name": "Lava cracks / Flames" },
+        4: None,
+        5: { "name": "Highlights" },
     },
 } # type: ignore
 

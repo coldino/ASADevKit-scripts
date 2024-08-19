@@ -19,7 +19,7 @@ reload_local_modules(BASE_PATH)
 
 from jsonutils import save_as_json
 from ue_utils import find_all_species, get_cdo_from_asset, get_dcsc_from_character_bp, load_asset
-from consts import MANUAL_SPECIES, SKIP_SPECIES, SKIP_SPECIES_ROOTS, SPECIES_REMAPS, WHITELIST_PATHS
+from consts import COLOR_REGION_WHITELIST, MANUAL_SPECIES, SKIP_SPECIES, SKIP_SPECIES_ROOTS, SPECIES_REMAPS, WHITELIST_PATHS
 from colors import parse_dyes
 from species.values import values_for_species
 
@@ -63,7 +63,8 @@ def main(version: str):
     new_species_data = {}
     changed_species_data = {}
     for bp, char in find_all_species(filter_species):
-        unreal.log_warning(bp.get_path_name().split('.')[0])
+        short_bp = bp.get_path_name().split('.')[0]
+        unreal.log_warning(short_bp)
         unreal.log_flush()
 
         # Extract "new" data from the DevKit
@@ -74,12 +75,16 @@ def main(version: str):
         # Pull old data from the existing values file
         old_data = old_species_data.get(new_data['blueprintPath'], None)
 
+        # New color data is only used for new species or when whitelisted
+        if old_data and short_bp not in COLOR_REGION_WHITELIST:
+            new_data.pop('colors', None)
+
         new_species_data[new_data['blueprintPath']] = new_data
 
         # Record changes between the two
         if old_data:
             changes = {}
-            # Collect changes per key
+            # Collect changes per new field
             for key, new_value in new_data.items():
                 old_value = old_data.get(key, None)
                 old_value = sanitise_old_value(old_value, key)

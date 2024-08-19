@@ -1,6 +1,6 @@
 from typing import Optional
-import unreal
-from unreal import PrimalDinoStatusComponent, PrimalDinoCharacter
+
+from unreal import PrimalDinoStatusComponent
 
 from consts import IS_PERCENT_STAT, STAT_COUNT
 from clean_numbers import clean_float as cf, clean_double as cd
